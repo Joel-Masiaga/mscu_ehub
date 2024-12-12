@@ -1,0 +1,146 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Lesson - {{ lesson.title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Sidebar: Modules and Lessons -->
+        <div class="col-12 col-md-4 col-lg-3 mb-4 mb-md-0">
+            <div class="bg-light p-3 shadow-sm rounded border-start border-primary" style="position: sticky; top: 1rem; max-height: 80vh; overflow-y: auto;">
+                <h5 class="text-primary fw-bold mb-3">{{ lesson.module.course.title }}</h5>
+                <ul class="list-unstyled">
+                    {% for module in lesson.module.course.modules.all|dictsort:"created_at" %}
+                        <li class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-folder2 text-primary fs-5 me-2"></i>
+                                <strong class="text-dark">{{ module.title }}</strong>
+                            </div>
+                            <ul class="list-unstyled ps-3">
+                                {% for sibling_lesson in module.lessons.all|dictsort:"created_at" %}
+                                    <li class="mb-2">
+                                        <a href="{% url 'lesson_detail' sibling_lesson.id %}" class="d-flex justify-content-between align-items-center text-decoration-none {% if sibling_lesson.id == lesson.id %}fw-bold text-primary{% else %}text-dark{% endif %}">
+                                            <span>{{ sibling_lesson.title }}</span>
+                                            {% if sibling_lesson.id in read_lesson_ids %}
+                                                <i class="bi bi-check-circle-fill text-success"></i>
+                                            {% endif %}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Lesson Content -->
+        <div class="col-12 col-md-8 col-lg-9">
+            <div class="bg-white p-4 shadow-sm rounded">
+                <h3 class="text-dark mb-4">{{ lesson.title }}</h3>
+                {% if lesson.image_content %}
+                    <img src="{{ lesson.image_content.url }}" class="img-fluid rounded shadow-sm mb-4" alt="{{ lesson.title }}">
+                {% endif %}
+
+                {% if lesson.description %}
+                    <p class="text-secondary mb-4">{{ lesson.description |safe }}</p>
+                {% endif %}
+
+                {% if lesson.objectives %}
+                    <div class="mb-4">
+                        <h5 class="text-dark mb-3">Learning Objectives</h5>
+                        <ul class="list-unstyled ps-3">
+                            {% for objective in lesson.objectives.splitlines %}
+                                <li class="mb-2">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>{{ objective|safe }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if lesson.content %}
+                    <div class="mb-4">
+                        <h5 class="text-dark mb-3">Lesson Content</h5>
+                        <p>{{ lesson.content|safe }}</p>
+                    </div>
+                {% endif %}
+
+                {% if lesson.video_content %}
+                    <div class="mb-4">
+                        <h5 class="text-dark mb-3">Watch the Lesson</h5>
+                        <div class="ratio ratio-16x9 rounded shadow-sm">
+                            {% with lesson.video_content|extract_video_id as video_id %}
+                                <iframe src="https://www.youtube.com/embed/{{ video_id }}" allowfullscreen class="border-0"></iframe>
+                            {% endwith %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if lesson.additional_material %}
+                    <div class="mb-4">
+                        <h5 class="text-dark mb-3">Additional Material</h5>
+                        <a href="{{ lesson.additional_material }}" target="_blank" class="btn btn-primary rounded-pill shadow">Open Resource</a>
+                    </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ progress_percentage|floatformat:2 }}%;" aria-valuenow="{{ progress_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ progress_percentage }}%</div>
+                    </div>
+                </div>
+
+                <!-- Test Your Knowledge Section -->
+                {% if lesson == lesson.module.lessons.last and lesson.module.quizzes.exists %}
+                    <div class="mb-4">
+                        <h5 class="text-dark mb-3">Test Your Knowledge</h5>
+                        {% with quiz=lesson.module.quizzes.first %}
+                            {% if quiz %}
+                                {% if quiz_attempt %}
+                                    <p>Your score: {{ quiz_attempt.score }}%. {% if quiz_attempt.score >= 75 %}You can proceed to the next module.{% else %}You need to retake the quiz to proceed.{% endif %}</p>
+                                    <a href="{% url 'quiz_detail' quiz.id %}" class="btn btn-primary rounded-pill shadow">Retake Quiz</a>
+                                {% else %}
+                                    <p>Take the quiz to test your knowledge!</p>
+                                    <a href="{% url 'quiz_detail' quiz.id %}" class="btn btn-primary rounded-pill shadow">Start Quiz</a>
+                                {% endif %}
+                            {% else %}
+                                <p>No quiz available for this module.</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                {% endif %}
+
+                <!-- Navigation Buttons -->
+                <div class="d-flex justify-content-between">
+                    <div>
+                        {% if previous_lesson %}
+                            <a href="{% url 'lesson_detail' previous_lesson.id %}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-arrow-left"></i> Previous</a>
+                        {% else %}
+                            <button class="btn btn-outline-secondary rounded-pill" disabled><i class="bi bi-arrow-left"></i> Previous</button>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <form method="POST" class="d-inline">
+                            {% csrf_token %}
+                            {% if read %}
+                                <button type="submit" name="unmark_read" class="btn btn-outline-danger rounded-pill">Unmark as Read</button>
+                            {% else %}
+                                <button type="submit" name="mark_read" class="btn btn-outline-success rounded-pill">Mark as Read</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                    <div>
+                        {% if next_lesson %}
+                            <a href="{% url 'lesson_detail' next_lesson.id %}" class="btn btn-outline-secondary rounded-pill">Next <i class="bi bi-arrow-right"></i></a>
+                        {% else %}
+                            <button class="btn btn-outline-secondary rounded-pill" disabled>Next <i class="bi bi-arrow-right"></i></button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}{{ course.title }} - Course Detail{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Course Title and Description -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h2 class="display-4">{{ course.title }}</h2>
+
+            <!-- Course Image -->
+            {% if course.image %}
+                <img src="{{ course.image.url }}" alt="{{ course.title }}" class="img-fluid mb-4 rounded">
+            {% endif %}
+
+            <p class="lead">{{ course.description |safe}}</p>
+        </div>
+    </div>
+
+    <!-- Course Objectives Section -->
+    <div class="card mb-4">
+        <div class="card-header p-2">
+            <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse" data-bs-target="#objectives" aria-expanded="false" aria-controls="objectives">
+                <strong>+ Objectives</strong>
+            </button>
+        </div>
+        <div class="collapse" id="objectives">
+            <div class="card-body">
+                <ol class="list-unstyled ps-3">
+                    {% for objective in course.objectives.splitlines %}
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>{{ objective|safe }} 
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Modules Section -->
+    <div class="modules-section">
+        <h4 class="mb-4 text-center">Modules</h4>
+        <div class="row">
+            {% for module in modules %}
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ module.title }}</h5>
+                            <p class="card-text"><strong>Objectives:</strong></p>
+                            <ol class="list-unstyled ps-3">
+                                {% for objective in module.objectives.splitlines %}
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success me-2"></i>{{ forloop.counter }}. {{ objective|safe }}
+                                </li>
+                                {% endfor %}
+                            </ol>
+                            <p class="card-text"><strong>Description:</strong> {{ module.description|safe }}</p>
+
+                            <!-- Collapsible Lessons List -->
+                            <button class="btn btn-info w-100" type="button" data-bs-toggle="collapse" data-bs-target="#lessons{{ module.id }}" aria-expanded="false" aria-controls="lessons{{ module.id }}">
+                                + Lessons
+                            </button>
+                            <div class="collapse mt-3" id="lessons{{ module.id }}">
+                                <ul class="list-unstyled ps-3">
+                                    {% for lesson in module.lessons.all %}
+                                        <li class="mb-2">
+                                            <span class="badge bg-primary me-2">{{ forloop.counter }}</span>
+                                            <strong>{{ lesson.title }}</strong>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Buttons Section (Enroll, Unenroll, and Cancel) -->
+    <div class="d-flex flex-column flex-md-row justify-content-between mt-4 gap-3">
+        <!-- Enroll or Unenroll Button -->
+        <div class="enroll-section text-center">
+            {% if user in course.enrolled_students.all %}
+                <!-- Unenroll Form -->
+                <form method="POST" action="{% url 'course_detail' course.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="unenroll">
+                    <button type="submit" class="btn btn-danger btn-lg w-100">Unenroll</button>
+                </form>
+            {% else %}
+                <!-- Enroll Form -->
+                <form method="POST" action="{% url 'course_detail' course.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="enroll">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Enroll Now</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Cancel Button -->
+        <div class="cancel-section text-center">
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-lg w-100">Cancel</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

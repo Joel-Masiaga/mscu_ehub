@@ -1,0 +1,202 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}Home - MSCU eHub{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-purple text-left" style="background-image: url('{% static 'home/background.jpg' %}'); background-size: cover; background-position: center;">
+    <div class="container py-5">
+        <p class="lead">Welcome back to the MSCU e-Hub</p>
+        <h1 class="fw-bold">Your MSCU Learning Adventure <br> Starts Here</h1>
+        <p class="lead">Believe. Learn. Achieve</p>
+    </div>
+</section>
+
+<!-- Welcome Video Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="mb-4 fw-bold">Hi Joel</h2>
+        <p class="text-muted">We are thrilled to have you!</p>
+        <div class="d-flex flex-column flex-lg-row align-items-center bg-light rounded shadow-sm p-4">
+            <!-- Left: Text Content -->
+            <div class="text-content me-lg-4">
+                <h4 class="text-primary fw-bold">Welcome Video</h4>
+                <p class="text-muted">
+                    Welcome to the MSCU eHUB! A place to grow in faith, connect with peers, and excel in your medical journey. Together, let's glorify God and impact lives for Christ!
+                </p>
+            </div>
+            <!-- Right: Video Thumbnail -->
+            <div class="video-thumbnail">
+                <img src="https://picsum.photos/400/250" class="img-fluid rounded" alt="Welcome Video">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- My Enrolled Courses Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 fw-bold">My Enrolled Courses</h2>
+        <div class="row">
+            {% if enrolled_courses %}
+                {% for course in enrolled_courses %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card shadow-sm border-0 rounded-3">
+                            {% if course.image %}
+                                <img src="{{ course.image.url }}" class="card-img-top rounded-top" alt="{{ course.title }}">
+                            {% else %}
+                                <img src="{% static 'images/default-course.jpg' %}" class="card-img-top rounded-top" alt="Default Course Image">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="text-purple fw-bold">{{ course.title }}</h5>
+                                <p class="text-muted">{{ course.description|truncatewords:15|safe }}</p>
+                                {% with first_lesson=course.modules.first.lessons.first %}
+                                    <div class="d-flex">
+                                        {% if first_lesson %}
+                                            <a href="{% url 'lesson_detail' first_lesson.id %}" class="btn btn-primary btn-sm me-2">Continue Learning</a>
+                                        {% else %}
+                                            <a href="#" class="btn btn-secondary btn-sm disabled me-2">No Lessons Available</a>
+                                        {% endif %}
+                                        <a href="{% url 'course_detail' course.id %}" class="btn btn-info btn-sm">View Course</a>
+                                    </div>
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">You are not enrolled in any courses yet. Start exploring and enroll today!</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Other Available Courses Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="mb-4 fw-bold">Other Available Courses</h2>
+        <div class="row">
+            {% for course in other_courses %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm border-0 rounded-3">
+                        {% if course.image %}
+                            <img src="{{ course.image.url }}" class="card-img-top rounded-top" alt="{{ course.title }}">
+                        {% else %}
+                            <img src="{% static 'images/default-course.jpg' %}" class="card-img-top rounded-top" alt="Default Course Image">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="text-purple fw-bold">{{ course.title }}</h5>
+                            <p class="text-muted">{{ course.description|truncatewords:15|safe }}</p>
+                            <div class="d-flex">
+                                <a href="{% url 'course_detail' course.id %}" class="btn btn-success btn-sm me-2">Enroll Now</a>
+                                <a href="{% url 'course_detail' course.id %}" class="btn btn-info btn-sm">View Course</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Explore the eHub -->
+<section class="py-5">
+    <div class="container text-left">
+        <h2 class="mb-4 fw-bold">Explore the eHub</h2>
+        <div class="row g-4">
+            <!-- My Learning -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <img src="https://picsum.photos/400/200?random=1" class="card-img-top rounded-top" alt="My Learning">
+                    <div class="card-body text-center">
+                        <div class="icon">
+                            <i class="bi bi-book fs-2 text-primary"></i>
+                        </div>
+                        <h5 class="text-purple fw-bold">My Learning</h5>
+                        <p class="text-muted">Access your programme and stay on track with your learning journey here</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Community -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <img src="https://picsum.photos/400/200?random=2" class="card-img-top rounded-top" alt="Community">
+                    <div class="card-body text-center">
+                        <div class="icon">
+                            <i class="bi bi-people fs-2 text-primary"></i>
+                        </div>
+                        <h5 class="text-purple fw-bold">Community</h5>
+                        <p class="text-muted">Access your programme and stay on track with your learning journey here</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Need Some Help -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <img src="https://picsum.photos/400/200?random=3" class="card-img-top rounded-top" alt="Need Some Help">
+                    <div class="card-body text-center">
+                        <div class="icon">
+                            <i class="bi bi-question-circle fs-2 text-primary"></i>
+                        </div>
+                        <h5 class="text-purple fw-bold">Need some help?</h5>
+                        <p class="text-muted">Access your programme and stay on track with your learning journey here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 fw-bold">Testimonials</h2>
+        <div class="d-flex justify-content-center align-items-center">
+            <!-- Left Arrow -->
+            <button class="btn btn-outline-secondary rounded-circle me-3">
+                <i class="bi bi-arrow-left text-purple fs-4"></i>
+            </button>
+            <!-- Testimonial Cards -->
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <!-- Testimonial 1 -->
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <img src="https://picsum.photos/300/200?random=1" class="card-img-top rounded-top" alt="Cyrus Maina">
+                        <div class="card-body text-center">
+                            <h5 class="text-purple fw-bold">Cyrus Maina</h5>
+                            <p class="text-muted">Access your programme and stay on track with your learning journey here</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <img src="https://picsum.photos/300/200?random=2" class="card-img-top rounded-top" alt="Dorancy Kiplagat">
+                        <div class="card-body text-center">
+                            <h5 class="text-purple fw-bold">Dorancy Kiplagat</h5>
+                            <p class="text-muted">Access your programme and stay on track with your learning journey here</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonial 3 -->
+                <div class="col">
+                    <div class="card shadow-sm border-0">
+                        <img src="https://picsum.photos/300/200?random=3" class="card-img-top rounded-top" alt="Sammy Too">
+                        <div class="card-body text-center">
+                            <h5 class="text-purple fw-bold">Sammy Too</h5>
+                            <p class="text-muted">Access your programme and stay on track with your learning journey here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Arrow -->
+            <button class="btn btn-outline-secondary rounded-circle ms-3">
+                <i class="bi bi-arrow-right text-purple fs-4"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+

@@ -1,0 +1,212 @@
+/* Base Styles */
+:root {
+    --primary-color: #6f42c1; /* Purple */
+    --secondary-color: #ffffff;
+    --background-color: #f8f9fa;
+    --brand-color: #7a1b7e;
+    --brand-hover-color: #9d4dbc;
+    --text-color: #6c757d;
+    --hover-bg-color: #f0f0f0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Navbar */
+.navbar {
+    z-index: 1000;
+    padding: 0 1rem;
+    background-color: var(--secondary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 75px;
+    color: var(--brand-color);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Dropdown Styling */
+.dropdown-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu .dropdown-item i {
+    font-size: 20px;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: var(--hover-bg-color);
+}
+
+/* Dark Theme Toggle */
+.form-check-input {
+    margin-top: -2px;
+}
+
+/* Hero Section */
+.hero-section {
+    height: 300px;
+    color: var(--primary-color);
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    text-align: left;
+}
+
+/* Card Styles */
+.card {
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    max-height: 250px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-body h5 {
+    color: var(--primary-color);
+}
+
+/* Section Spacing */
+section {
+    padding: 60px 0;
+}
+
+/* Footer */
+footer {
+    background-color: #f1f1f1;
+    padding: 40px 0;
+}
+
+footer .row h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+footer a {
+    text-decoration: none;
+    color: var(--text-color);
+    transition: color 0.2s ease-in-out;
+}
+
+footer a:hover {
+    color: var(--primary-color);
+}
+
+/* Bottom Bar */
+#bottom {
+    background-color: var(--brand-color) !important;
+    color: var(--secondary-color);
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    position: relative;
+    width: 100%;
+}
+
+#bottom a {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+#bottom a:hover {
+    color: var(--hover-bg-color);
+}
+
+/* Sidebar */
+.sidebar {
+    max-height: 80vh;
+    overflow-y: auto;
+    border-left: 3px solid var(--brand-color);
+    font-family: 'Poppins', sans-serif;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--brand-color);
+    border-radius: 5px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease-in-out;
+}
+
+.sidebar a:hover {
+    color: var(--brand-hover-color);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 992px) {
+    .column {
+        flex: 50%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .row {
+        flex-direction: column;
+    }
+
+    .navbar .navbar-brand span {
+        font-size: 1rem;
+    }
+
+    .hero-section {
+        height: 200px;
+        padding: 50px 0;
+    }
+
+    footer {
+        text-align: center;
+    }
+}
+
+/* Utility Classes */
+.full-width {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+}
+
+/* Responsive Images */
+img {
+    max-width: 100%;
+    height: auto;
+}

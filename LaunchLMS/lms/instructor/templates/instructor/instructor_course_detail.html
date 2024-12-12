@@ -1,0 +1,43 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ course.title }}</h1>
+    <p>{{ course.description }}</p>
+    
+    <!-- Button to create a new module -->
+    <a href="{% url 'module_create' course.id %}" class="btn btn-primary">Add Module</a>
+    
+    <!-- List of modules -->
+    <ul class="list-group mt-3">
+        {% for module in modules %}
+        <li class="list-group-item">
+            <h5>{{ module.title }}</h5>
+            <p>{{ module.description|truncatewords:20|safe }}</p>
+            
+            <!-- Buttons for module actions -->
+            <a href="{% url 'module_detail' module.id %}" class="btn btn-info">View Details</a>
+            <a href="{% url 'module_edit' module.id %}" class="btn btn-warning">Edit</a>
+            <a href="{% url 'module_delete' module.id %}" class="btn btn-danger">Delete</a>
+            
+            <!-- List of lessons -->
+            <ul class="list-group mt-3">
+                {% for lesson in module.lessons.all %}
+                <li class="list-group-item">
+                    <h6>{{ lesson.title }}</h6>
+                    <p>{{ lesson.description|truncatewords:15|safe }}</p>
+                    
+                    <!-- Buttons for lesson actions -->
+                    <a href="{% url 'lesson_detail' lesson.id %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'lesson_edit' lesson.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'lesson_delete' lesson.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No modules found. <a href="{% url 'create_module' course.id %}">Add one now</a>.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+

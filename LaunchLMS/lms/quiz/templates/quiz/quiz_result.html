@@ -1,0 +1,46 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Quiz Results - {{ quiz.module.title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h3 class="text-primary">Your Quiz Results</h3>
+
+    <!-- Quiz Results Summary -->
+    <div class="alert alert-info">
+        <h5>Module: {{ quiz.module.title }}</h5>
+        <p><strong>Your Score:</strong> {{ score }} out of {{ total_questions }}</p>
+        <p><strong>Percentage:</strong> {{ score_percentage }}%</p>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="alert {% if score_percentage >= 75 %}alert-success{% else %}alert-danger{% endif %}">
+        <p><strong>Feedback:</strong> {{ message }}</p>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-between mt-4">
+        <!-- Back to Module: Last Lesson -->
+        <a href="{% url 'lesson_detail' quiz.module.lessons.last.id %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Last Lesson
+        </a>
+
+        <!-- Proceed to Next Lesson -->
+        {% if score_percentage >= 75 %}
+            {% if next_lesson %}
+                <a href="{% url 'lesson_detail' next_lesson.id %}" class="btn btn-success">
+                    Proceed to Next Lesson <i class="bi bi-arrow-right"></i>
+                </a>
+            {% else %}
+                <button class="btn btn-outline-secondary disabled">
+                    No next lesson available
+                </button>
+            {% endif %}
+        {% else %}
+            <button class="btn btn-outline-secondary disabled">
+                Retake quiz to proceed
+            </button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

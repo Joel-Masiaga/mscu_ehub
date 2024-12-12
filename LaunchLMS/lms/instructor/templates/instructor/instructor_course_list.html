@@ -1,0 +1,17 @@
+<!-- instructor_course_list.html -->
+{% extends 'home/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Courses</h1>
+    <a href="{% url 'course_create' %}" class="btn btn-primary">Create New Course</a>
+    <ul class="list-group mt-3">
+        {% for course in courses %}
+        <li class="list-group-item">
+            <h5>{{ course.title }}</h5>
+            <p>{{ course.description|truncatewords:20 | safe}}</p>
+            <a href="{% url 'instructor_course_detail' course.id %}" class="btn btn-info">View Details</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

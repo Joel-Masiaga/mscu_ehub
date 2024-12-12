@@ -1,0 +1,42 @@
+{% extends 'home/base.html' %}
+
+<!-- instructor_dashboard.html -->
+{% block content %}
+<div class="container mt-4">
+    <h1>Instructor Dashboard</h1>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Courses</h5>
+                    <p>{{ total_courses }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Modules</h5>
+                    <p>{{ total_modules }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Lessons</h5>
+                    <p>{{ total_lessons }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Total Students</h5>
+                    <p>{{ total_students }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

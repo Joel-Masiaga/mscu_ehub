@@ -1,0 +1,45 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Create a New Course</h1>
+    <div class="card mt-4">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <!-- Course Title -->
+                <div class="mb-3">
+                    <label for="id_title" class="form-label">Course Title</label>
+                    {{ form.title|crispy }}
+                </div>
+
+                <!-- Course Description -->
+                <div class="mb-3">
+                    <label for="id_description" class="form-label">Course Description</label>
+                    {{ form.description|crispy }}
+                </div>
+
+                <!-- Course Objectives -->
+                <div class="mb-3">
+                    <label for="id_objectives" class="form-label">Course Objectives</label>
+                    {{ form.objectives|crispy }}
+                </div>
+
+                <!-- Course Image -->
+                <div class="mb-3">
+                    <label for="id_image" class="form-label">Course Image (optional)</label>
+                    {{ form.image }}  <!-- No need for crispy here, it's a file input -->
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">Create Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
